@@ -1,84 +1,56 @@
-// NAVIGATION
-function show(id) {
-    document.querySelectorAll(".section").forEach(sec => {
-        sec.style.display = "none";
-    });
-    document.getElementById(id).style.display = "block";
+function show(num) {
+  document.querySelectorAll(".box").forEach(el => el.style.display = "none");
+  document.getElementById("exp" + num).style.display = "block";
 }
 
-show("exp1");
+/* 🔗 EXP 1 — API (Axios-like simulation) */
+function fetchData() {
+  const div = document.getElementById("apiData");
+  div.innerHTML = "Loading... ⏳";
 
-// ================= 2.1.1 CRUD =================
-let products = [];
-
-function addProduct() {
-    let name = document.getElementById("pname").value;
-    let price = document.getElementById("pprice").value;
-    let category = document.getElementById("pcat").value;
-
-    let product = { name, price, category };
-    products.push(product);
-
-    displayProducts();
+  setTimeout(() => {
+    const data = ["Product 1", "Product 2", "Product 3"];
+    div.innerHTML = data.map(p => `<div>${p}</div>`).join("");
+  }, 1000);
 }
 
-function displayProducts() {
-    let html = "";
-    products.forEach((p, i) => {
-        html += `
-        <div class="card">
-            <b>${p.name}</b><br>
-            ₹${p.price} - ${p.category}<br>
-            <button onclick="deleteProduct(${i})">Delete</button>
-        </div>`;
-    });
+/* 🛒 EXP 2 — Redux Cart */
+let cart = [];
 
-    document.getElementById("productList").innerHTML = html;
+function addItem() {
+  cart.push("Item " + (cart.length + 1));
+  renderCart();
 }
 
-function deleteProduct(i) {
-    products.splice(i, 1);
-    displayProducts();
+function renderCart() {
+  const ul = document.getElementById("cart");
+  ul.innerHTML = "";
+  cart.forEach((item, i) => {
+    ul.innerHTML += `
+      <li>
+        ${item}
+        <button onclick="removeItem(${i})">❌</button>
+      </li>`;
+  });
 }
 
-// ================= 2.1.2 MVC =================
-let students = [];
-
-function addStudent() {
-    let name = document.getElementById("sname").value;
-    students.push(name);
-
-    let list = "";
-    students.forEach(s => {
-        list += `<li>${s}</li>`;
-    });
-
-    document.getElementById("studentList").innerHTML = list;
+function removeItem(i) {
+  cart.splice(i, 1);
+  renderCart();
 }
 
-// ================= 2.1.3 CATALOG =================
-function loadCatalog() {
-    let data = [
-        {
-            name: "Premium Headphones",
-            variants: [
-                { color: "Black", price: 199.99 },
-                { color: "White", price: 209.99 }
-            ]
-        }
-    ];
+/* 💬 EXP 3 — Chat Simulation */
+function sendMsg() {
+  const input = document.getElementById("msg");
+  const box = document.getElementById("chatBox");
 
-    let html = "";
+  if (input.value === "") return;
 
-    data.forEach(p => {
-        html += `<div class="card"><h3>${p.name}</h3>`;
+  box.innerHTML += `<div>You: ${input.value}</div>`;
+  
+  setTimeout(() => {
+    box.innerHTML += `<div>Server: Reply to "${input.value}"</div>`;
+  }, 500);
 
-        p.variants.forEach(v => {
-            html += `<p>${v.color} - ₹${v.price}</p>`;
-        });
-
-        html += `</div>`;
-    });
-
-    document.getElementById("catalog").innerHTML = html;
+  input.value = "";
 }
